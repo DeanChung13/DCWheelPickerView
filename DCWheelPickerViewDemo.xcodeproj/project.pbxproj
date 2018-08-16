@@ -13,6 +13,10 @@
 		40503A8E2125472F005F0831 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40503A8D2125472F005F0831 /* Assets.xcassets */; };
 		40503A912125472F005F0831 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40503A8F2125472F005F0831 /* LaunchScreen.storyboard */; };
 		40503A9C2125472F005F0831 /* DCWheelPickerViewDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503A9B2125472F005F0831 /* DCWheelPickerViewDemoTests.swift */; };
+		40503AA8212547FD005F0831 /* DCWheelPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AA7212547FD005F0831 /* DCWheelPickerView.swift */; };
+		40503AAA21254807005F0831 /* DCWheelSector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AA921254807005F0831 /* DCWheelSector.swift */; };
+		40503AAC2125484F005F0831 /* DCWheelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAB2125484F005F0831 /* DCWheelContainer.swift */; };
+		40503AAE2125E1FB005F0831 /* DCWheelCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -36,6 +40,10 @@
 		40503A972125472F005F0831 /* DCWheelPickerViewDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DCWheelPickerViewDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		40503A9B2125472F005F0831 /* DCWheelPickerViewDemoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelPickerViewDemoTests.swift; sourceTree = "<group>"; };
 		40503A9D2125472F005F0831 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		40503AA7212547FD005F0831 /* DCWheelPickerView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelPickerView.swift; sourceTree = "<group>"; };
+		40503AA921254807005F0831 /* DCWheelSector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelSector.swift; sourceTree = "<group>"; };
+		40503AAB2125484F005F0831 /* DCWheelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelContainer.swift; sourceTree = "<group>"; };
+		40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelCenterView.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -79,6 +87,7 @@
 			children = (
 				40503A862125472E005F0831 /* AppDelegate.swift */,
 				40503A882125472E005F0831 /* ViewController.swift */,
+				40503AA6212547CC005F0831 /* DCWheelPickerView */,
 				40503A8A2125472E005F0831 /* Main.storyboard */,
 				40503A8D2125472F005F0831 /* Assets.xcassets */,
 				40503A8F2125472F005F0831 /* LaunchScreen.storyboard */,
@@ -94,6 +103,17 @@
 				40503A9D2125472F005F0831 /* Info.plist */,
 			);
 			path = DCWheelPickerViewDemoTests;
+			sourceTree = "<group>";
+		};
+		40503AA6212547CC005F0831 /* DCWheelPickerView */ = {
+			isa = PBXGroup;
+			children = (
+				40503AA7212547FD005F0831 /* DCWheelPickerView.swift */,
+				40503AA921254807005F0831 /* DCWheelSector.swift */,
+				40503AAB2125484F005F0831 /* DCWheelContainer.swift */,
+				40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */,
+			);
+			path = DCWheelPickerView;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -197,8 +217,12 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				40503AAC2125484F005F0831 /* DCWheelContainer.swift in Sources */,
 				40503A892125472E005F0831 /* ViewController.swift in Sources */,
+				40503AAE2125E1FB005F0831 /* DCWheelCenterView.swift in Sources */,
 				40503A872125472E005F0831 /* AppDelegate.swift in Sources */,
+				40503AAA21254807005F0831 /* DCWheelSector.swift in Sources */,
+				40503AA8212547FD005F0831 /* DCWheelPickerView.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
