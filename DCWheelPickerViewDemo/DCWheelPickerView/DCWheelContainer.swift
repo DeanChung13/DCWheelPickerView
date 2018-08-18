@@ -16,7 +16,7 @@ class DCWheelContainerView: UIView {
   private var radius: CGFloat {
     return frame.size.width / 2.0 - 10.0
   }
-  private var selectedIndex: Int = 5
+  private var selectedIndex: Int = 0
   private var maxNumber: Int = 0
   private let numberOfSectors = 10
   private lazy var sectors: [DCWheelSector] = {
@@ -25,6 +25,7 @@ class DCWheelContainerView: UIView {
     return sectors
   }()
   private var style: WheelContainerStyle
+  private var sectorLayers: [CAShapeLayer] = []
 
   let sectorColor1 = UIColor(rgbHex: 0x59636F).cgColor
   let sectorColor2 = UIColor(rgbHex: 0x90A6BC).cgColor
@@ -47,74 +48,74 @@ class DCWheelContainerView: UIView {
   }
 
   private func buildSectors() {
-    var mid: Float = 0
+    var mid = CGFloat.pi
     for i in 0 ..< numberOfSectors {
       let sector = DCWheelSector(midValue: mid, fanWidth: fanWidth(), index: i)
-      if sector.maxValue-fanWidth() < -Float.pi {
-        mid = Float.pi
-      }
-      mid -= fanWidth()
+      mid += fanWidth()
       sectors.append(sector)
     }
   }
 
-  private func fanWidth() -> Float {
-    return Float.pi * 2 / Float(numberOfSectors)
+  private func fanWidth() -> CGFloat {
+    return CGFloat.pi * 2 / CGFloat(numberOfSectors)
   }
 
   private func drawWheel() {
-    doWithAllSectors(drawSector)
-    doWithAllSectors(addSectorTextLabel)
+    doWithAllSectors(action: drawShape)
+    doWithAllSectors(action: addTextLabel)
 //    doWithAllSectors(drawSectorTextLayer)
   }
 
+  private func updateSelectedSectorBackgroundColor(index newSelectedIndex: Int) {
+    let oldSelectedSectorLayer = sectorLayers[selectedIndex]
+    fillColor(layer: oldSelectedSectorLayer, index: selectedIndex)
 
-  private func doWithAllSectors(_ action: (Int) -> Void) {
-    for index in 0 ..< numberOfSectors {
-      action(index)
+    let newSelectedSectorLayer = sectorLayers[newSelectedIndex]
+    newSelectedSectorLayer.fillColor = sectorSelectedColor
+    selectedIndex = newSelectedIndex
+  }
+
+
+  private func doWithAllSectors(action: (DCWheelSector) -> Void) {
+    for sector in sectors {
+      action(sector)
     }
   }
 
-  private func drawSector(index: Int) {
+  private func drawShape(with sector: DCWheelSector) {
     let sectorLayer = CAShapeLayer()
     let path = UIBezierPath()
     path.move(to: centerPoint)
-    let mid = Float(index) * fanWidth()
-    let startAngle = CGFloat(mid - fanWidth()/2)
-    let endAngle = CGFloat(mid + fanWidth()/2)
     path.addArc(withCenter: centerPoint,
                 radius: radius,
-                startAngle: startAngle,
-                endAngle: endAngle,
+                startAngle: CGFloat(sector.minValue),
+                endAngle: CGFloat(sector.maxValue),
                 clockwise: true)
     path.close()
     sectorLayer.path = path.cgPath
 
-    fillColor(layer: sectorLayer, index: index)
+    fillColor(layer: sectorLayer, index: sector.index)
+    sectorLayers.append(sectorLayer)
     layer.addSublayer(sectorLayer)
   }
 
   private func fillColor(layer: CAShapeLayer, index: Int) {
-    guard selectedIndex != index else {
-      layer.fillColor = sectorSelectedColor
-      return
-    }
     let color1 = (style == .outside) ? sectorColor1 : sectorColor2
     let color2 = (style == .outside) ? sectorColor2 : sectorColor1
     layer.fillColor = (index % 2 == 0) ? color1 : color2
   }
 
-  private func addSectorTextLabel(index: Int) {
+  private func addTextLabel(with sector: DCWheelSector) {
     let label = UILabel(frame: CGRect(x: 0, y: 0, width: radius, height: radius))
     label.font = UIFont.boldSystemFont(ofSize: 26)
     label.backgroundColor = UIColor.clear
     label.textColor = UIColor.white
     label.textAlignment = .center
-    label.text = "\(index)"
+    label.text = "\(sector.index)"
     label.layer.anchorPoint = CGPoint(x: 0.5, y: labelAnchorPointY())
     label.layer.position = centerPoint
     label.transform = CGAffineTransform.identity
-      .rotated(by: CGFloat(midAngle(index: index)-Float.pi/2))
+      .rotated(by: sector.labelAngle)
     addSubview(label)
   }
 
@@ -122,7 +123,7 @@ class DCWheelContainerView: UIView {
     return (style == .outside) ? 1.37 : 1.3
   }
 
-  private func drawSectorTextLayer(index: Int) {
+  private func drawTextLayer(with sector: DCWheelSector) {
     let textLayer = CATextLayer()
     textLayer.frame = CGRect(x: 0, y: 0, width: radius, height: radius)
 //    textLayer.contentsScale = UIScreen.main.scale
@@ -130,16 +131,12 @@ class DCWheelContainerView: UIView {
     textLayer.backgroundColor = UIColor.clear.cgColor
     textLayer.foregroundColor = UIColor.white.cgColor
     textLayer.alignmentMode = .center
-    textLayer.string = "\(index)"
+    textLayer.string = "\(sector.index)"
     textLayer.anchorPoint = CGPoint(x: 0.5, y: 1)
     textLayer.position = centerPoint
     textLayer.setAffineTransform(CGAffineTransform.identity
-      .rotated(by: CGFloat(midAngle(index: index)-Float.pi/2)))
+      .rotated(by: sector.labelAngle))
     layer.addSublayer(textLayer)
-  }
-
-  private func midAngle(index: Int) -> Float {
-    return Float(index) * fanWidth()
   }
 
   private func setupBorder() {
@@ -151,41 +148,33 @@ class DCWheelContainerView: UIView {
   }
 
   private var sectorDifferenceValue: CGFloat = 0
+
   func detectIndex() -> Int {
-    var result: Float = 0
-    var resultIndex = 0
-    let radians = atan2f(Float(transform.b), Float(transform.a))
-    for sector in sectors {
-      if sector.minValue > 0 && sector.maxValue < 0 {
-        if sector.maxValue > radians || sector.minValue < radians {
-          if radians > 0 {
-            result = radians - Float.pi
-          } else {
-            result = Float.pi + radians
-          }
-          resultIndex = sector.index
-        }
-      } else if radians > sector.minValue && radians < sector.maxValue {
-        result = radians - sector.midValue
-        resultIndex = sector.index
-      }
-    }
-    sectorDifferenceValue = CGFloat(result)
-    return resultIndex
+    let result = detectCurrentSector().index
+    updateSelectedSectorBackgroundColor(index: result)
+    return result
   }
 
-  func alignmentSector(index: Int) {
-    let radians = atan2f(Float(transform.b), Float(transform.a))
-    let selectedSector = sectors.filter { $0.index == index }.last
-    guard let sector = selectedSector else { return }
-    let result = CGFloat(radians - sector.minValue)
-    print("(\(result) : \(sectorDifferenceValue))")
-
+  func alignmentSector() {
+    let sectorDifferenceValue = currentSectorValue() - detectCurrentSector().midValue
     UIView.animate(withDuration: 0.2) {
-      self.transform = self.transform.rotated(by: -self.sectorDifferenceValue)
-//      self.transform = self.transform.rotated(by: result)
+      self.transform = self.transform.rotated(by: sectorDifferenceValue)
     }
   }
+
+  private func detectCurrentSector() -> DCWheelSector {
+    return sectors.filter {
+      currentSectorValue() > $0.minValue &&
+      currentSectorValue() < $0.maxValue
+      }.last ?? sectors.first!
+  }
+
+  private func currentSectorValue() -> CGFloat {
+    let radians = atan2f(Float(transform.b), Float(transform.a))
+    let convertAngle = (radians <= 0) ? CGFloat.pi : 3*CGFloat.pi
+    return convertAngle - CGFloat(radians)
+  }
+
 }
 
 extension UIColor {

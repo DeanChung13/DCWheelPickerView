@@ -6,27 +6,26 @@
 //  Copyright © 2018 DeanChung. All rights reserved.
 //
 
-import Foundation
+import UIKit
 
 class DCWheelSector {
-  let minValue: Float
-  let maxValue: Float
-  let midValue: Float
+  var minValue: CGFloat {
+    return midValue - fanWidth/2
+  }
+  var maxValue: CGFloat {
+    return midValue + fanWidth/2
+  }
+  var labelAngle: CGFloat {
+    return midValue + CGFloat.pi/2
+  }
+  let midValue: CGFloat
   let index: Int
+  private let fanWidth: CGFloat
 
-  init(midValue: Float, fanWidth: Float, index: Int) {
-    var newMinValue = midValue - fanWidth/2
-    let newMaxValue = midValue + fanWidth/2
-    var newMidValue = midValue
 
-    if newMaxValue-fanWidth < -Float.pi {
-      newMidValue = Float.pi
-      newMinValue = fabsf(newMaxValue)
-    }
-
-    self.midValue = newMidValue
-    self.minValue = newMinValue
-    self.maxValue = newMaxValue
+  init(midValue: CGFloat, fanWidth: CGFloat, index: Int) {
+    self.midValue = midValue
+    self.fanWidth = fanWidth
     self.index = index
   }
 }

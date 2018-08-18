@@ -117,15 +117,17 @@ class DCWheelPickerView: UIControl {
   }
 
   override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
+    print(#function)
+    let outerIndex = outerWheel.detectIndex()
+    let innerIndex = innerWheel.detectIndex()
+
+    let result  = 10*outerIndex + innerIndex
     if startTouchArea == .outer {
-      let index = outerWheel.detectIndex()
-      outerWheel.alignmentSector(index: index)
-      print(index)
+      outerWheel.alignmentSector()
     } else if startTouchArea == .inner {
-      let index = innerWheel.detectIndex()
-      innerWheel.alignmentSector(index: index)
-      print(index)
+      innerWheel.alignmentSector()
     }
+    centerWheel.changeValue(number: result)
   }
 
 //  private func touchArea(touchPoint: CGPoint) -> TouchArea  {
