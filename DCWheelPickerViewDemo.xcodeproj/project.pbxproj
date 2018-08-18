@@ -17,6 +17,7 @@
 		40503AAA21254807005F0831 /* DCWheelSector.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AA921254807005F0831 /* DCWheelSector.swift */; };
 		40503AAC2125484F005F0831 /* DCWheelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAB2125484F005F0831 /* DCWheelContainer.swift */; };
 		40503AAE2125E1FB005F0831 /* DCWheelCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */; };
+		40503AB02126C9DB005F0831 /* DCWheelArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAF2126C9DB005F0831 /* DCWheelArea.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +45,7 @@
 		40503AA921254807005F0831 /* DCWheelSector.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelSector.swift; sourceTree = "<group>"; };
 		40503AAB2125484F005F0831 /* DCWheelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelContainer.swift; sourceTree = "<group>"; };
 		40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelCenterView.swift; sourceTree = "<group>"; };
+		40503AAF2126C9DB005F0831 /* DCWheelArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelArea.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +114,7 @@
 				40503AA921254807005F0831 /* DCWheelSector.swift */,
 				40503AAB2125484F005F0831 /* DCWheelContainer.swift */,
 				40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */,
+				40503AAF2126C9DB005F0831 /* DCWheelArea.swift */,
 			);
 			path = DCWheelPickerView;
 			sourceTree = "<group>";
@@ -223,6 +226,7 @@
 				40503A872125472E005F0831 /* AppDelegate.swift in Sources */,
 				40503AAA21254807005F0831 /* DCWheelSector.swift in Sources */,
 				40503AA8212547FD005F0831 /* DCWheelPickerView.swift in Sources */,
+				40503AB02126C9DB005F0831 /* DCWheelArea.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

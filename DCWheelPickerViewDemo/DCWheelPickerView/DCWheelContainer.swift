@@ -14,7 +14,7 @@ enum WheelContainerStyle {
 
 class DCWheelContainerView: UIView {
   private var radius: CGFloat {
-    return frame.size.width / 2.0
+    return frame.size.width / 2.0 - 10.0
   }
   private var selectedIndex: Int = 5
   private var maxNumber: Int = 0
@@ -30,12 +30,16 @@ class DCWheelContainerView: UIView {
   let sectorColor2 = UIColor(rgbHex: 0x90A6BC).cgColor
   let sectorSelectedColor = UIColor(rgbHex: 0x55BFE7).cgColor
 
+  private let borderImageView = UIImageView()
+
   init(frame: CGRect, style: WheelContainerStyle = .outside) {
     self.style = style
     super.init(frame: frame)
-    self.backgroundColor = UIColor.clear
+    backgroundColor = UIColor.clear
+    isUserInteractionEnabled = false
     buildSectors()
     drawWheel()
+    setupBorder()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -46,6 +50,9 @@ class DCWheelContainerView: UIView {
     var mid: Float = 0
     for i in 0 ..< numberOfSectors {
       let sector = DCWheelSector(midValue: mid, fanWidth: fanWidth(), index: i)
+      if sector.maxValue-fanWidth() < -Float.pi {
+        mid = Float.pi
+      }
       mid -= fanWidth()
       sectors.append(sector)
     }
@@ -53,10 +60,6 @@ class DCWheelContainerView: UIView {
 
   private func fanWidth() -> Float {
     return Float.pi * 2 / Float(numberOfSectors)
-  }
-
-  override func draw(_ rect: CGRect) {
-
   }
 
   private func drawWheel() {
@@ -108,17 +111,21 @@ class DCWheelContainerView: UIView {
     label.textColor = UIColor.white
     label.textAlignment = .center
     label.text = "\(index)"
-    label.layer.anchorPoint = CGPoint(x: 0.5, y: 1.3)
+    label.layer.anchorPoint = CGPoint(x: 0.5, y: labelAnchorPointY())
     label.layer.position = centerPoint
     label.transform = CGAffineTransform.identity
       .rotated(by: CGFloat(midAngle(index: index)-Float.pi/2))
     addSubview(label)
   }
 
+  private func labelAnchorPointY() -> CGFloat {
+    return (style == .outside) ? 1.37 : 1.3
+  }
+
   private func drawSectorTextLayer(index: Int) {
     let textLayer = CATextLayer()
     textLayer.frame = CGRect(x: 0, y: 0, width: radius, height: radius)
-    textLayer.contentsScale = UIScreen.main.scale
+//    textLayer.contentsScale = UIScreen.main.scale
     textLayer.font = UIFont.boldSystemFont(ofSize: 26)
     textLayer.backgroundColor = UIColor.clear.cgColor
     textLayer.foregroundColor = UIColor.white.cgColor
@@ -135,6 +142,50 @@ class DCWheelContainerView: UIView {
     return Float(index) * fanWidth()
   }
 
+  private func setupBorder() {
+    borderImageView.frame = bounds
+    addSubview(borderImageView)
+    let image = (style == .outside) ? UIImage(named: "O_out") :
+      UIImage(named: "O_middle")
+    borderImageView.image = image
+  }
+
+  private var sectorDifferenceValue: CGFloat = 0
+  func detectIndex() -> Int {
+    var result: Float = 0
+    var resultIndex = 0
+    let radians = atan2f(Float(transform.b), Float(transform.a))
+    for sector in sectors {
+      if sector.minValue > 0 && sector.maxValue < 0 {
+        if sector.maxValue > radians || sector.minValue < radians {
+          if radians > 0 {
+            result = radians - Float.pi
+          } else {
+            result = Float.pi + radians
+          }
+          resultIndex = sector.index
+        }
+      } else if radians > sector.minValue && radians < sector.maxValue {
+        result = radians - sector.midValue
+        resultIndex = sector.index
+      }
+    }
+    sectorDifferenceValue = CGFloat(result)
+    return resultIndex
+  }
+
+  func alignmentSector(index: Int) {
+    let radians = atan2f(Float(transform.b), Float(transform.a))
+    let selectedSector = sectors.filter { $0.index == index }.last
+    guard let sector = selectedSector else { return }
+    let result = CGFloat(radians - sector.minValue)
+    print("(\(result) : \(sectorDifferenceValue))")
+
+    UIView.animate(withDuration: 0.2) {
+      self.transform = self.transform.rotated(by: -self.sectorDifferenceValue)
+//      self.transform = self.transform.rotated(by: result)
+    }
+  }
 }
 
 extension UIColor {

@@ -15,9 +15,18 @@ class DCWheelSector {
   let index: Int
 
   init(midValue: Float, fanWidth: Float, index: Int) {
-    self.midValue = midValue
-    self.minValue = midValue - fanWidth/2
-    self.maxValue = midValue + fanWidth/2
+    var newMinValue = midValue - fanWidth/2
+    let newMaxValue = midValue + fanWidth/2
+    var newMidValue = midValue
+
+    if newMaxValue-fanWidth < -Float.pi {
+      newMidValue = Float.pi
+      newMinValue = fabsf(newMaxValue)
+    }
+
+    self.midValue = newMidValue
+    self.minValue = newMinValue
+    self.maxValue = newMaxValue
     self.index = index
   }
 }

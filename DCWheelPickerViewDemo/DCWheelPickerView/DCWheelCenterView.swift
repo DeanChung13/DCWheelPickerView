@@ -15,6 +15,7 @@ class DCWheelCenterView: UIView {
     let size = templateText.size(withAttributes: [.font: font])
     let label = UILabel(frame: CGRect(origin: .zero, size: size))
     label.font = font
+    label.text = "--"
     label.textColor = UIColor.white
     label.textAlignment = .center
     label.adjustsFontSizeToFitWidth = true
@@ -23,10 +24,14 @@ class DCWheelCenterView: UIView {
     return label
   }()
 
+  private let borderImageView = UIImageView(image: UIImage(named: "O_inside"))
+
   override init(frame: CGRect) {
     super.init(frame: frame)
     drawCircle()
     addSubview(numberLabel)
+    setupBorder()
+    isUserInteractionEnabled = false
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -50,6 +55,12 @@ class DCWheelCenterView: UIView {
     circleShapeLayer.path = path.cgPath
     circleShapeLayer.fillColor = UIColor(rgbHex: 0xFD3589).cgColor
     layer.addSublayer(circleShapeLayer)
+  }
+
+  private func setupBorder() {
+    let padding: CGFloat = -28.0
+    borderImageView.frame = bounds.insetBy(dx: padding, dy: padding)
+    addSubview(borderImageView)
   }
 
   func changeValue(number: Int) {
