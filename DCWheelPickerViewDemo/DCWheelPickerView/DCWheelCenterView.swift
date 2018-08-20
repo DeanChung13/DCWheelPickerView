@@ -24,8 +24,6 @@ class DCWheelCenterView: UIView {
     return label
   }()
 
-  private let borderImageView = UIImageView(image: UIImage(named: "O_inside"))
-
   override init(frame: CGRect) {
     super.init(frame: frame)
     drawCircle()
@@ -45,22 +43,39 @@ class DCWheelCenterView: UIView {
 
   private func drawCircle() {
     let circleShapeLayer = CAShapeLayer()
-    let path = UIBezierPath()
-    path.addArc(withCenter: centerPoint,
-                radius: bounds.width/2.0,
-                startAngle: 0,
-                endAngle: 2*CGFloat.pi,
-                clockwise: true)
-    path.close()
+    let path = UIBezierPath(ovalIn: bounds)
     circleShapeLayer.path = path.cgPath
     circleShapeLayer.fillColor = UIColor(rgbHex: 0xFD3589).cgColor
     layer.addSublayer(circleShapeLayer)
   }
 
   private func setupBorder() {
-    let padding: CGFloat = -28.0
-    borderImageView.frame = bounds.insetBy(dx: padding, dy: padding)
-    addSubview(borderImageView)
+    addArrow()
+    let borderLayer = CAShapeLayer()
+    let path = UIBezierPath(ovalIn: bounds)
+    borderLayer.path = path.cgPath
+    borderLayer.fillColor = UIColor.clear.cgColor
+    borderLayer.strokeColor = UIColor.white.cgColor
+    borderLayer.lineWidth = 4.0
+    borderLayer.shadowColor = UIColor.darkGray.cgColor
+    borderLayer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+    borderLayer.shadowOpacity = 0.8
+    layer.addSublayer(borderLayer)
+  }
+
+  private func addArrow() {
+    let arrowLayer = CAShapeLayer()
+    let path = UIBezierPath()
+    let triangleHeight: CGFloat = 13
+    let triangleTopPoint = CGPoint(x: -triangleHeight, y: bounds.height/2)
+    path.move(to: triangleTopPoint)
+    path.addLine(to: CGPoint(x: 0, y: bounds.height/2+triangleHeight))
+    path.addLine(to: CGPoint(x: 0, y: bounds.height/2-triangleHeight))
+    path.addLine(to: triangleTopPoint)
+    path.close()
+    arrowLayer.path = path.cgPath
+    arrowLayer.fillColor = UIColor.white.cgColor
+    layer.addSublayer(arrowLayer)
   }
 
   func changeValue(number: Int) {
