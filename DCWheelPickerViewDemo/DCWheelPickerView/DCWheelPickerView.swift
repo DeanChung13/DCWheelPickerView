@@ -23,14 +23,7 @@ class DCWheelPickerView: UIControl {
   private lazy var centerWheel: DCWheelCenterView = {
     return DCWheelCenterView(frame: wheelArea.centerFrame)
   }()
-  private lazy var glassCover: UIImageView = {
-    let imageView = UIImageView(image: UIImage(named: "glass"))
-    imageView.contentMode = .scaleAspectFit
-    imageView.frame = CGRect(x: 2, y: 2,
-                             width: bounds.width/2, height: bounds.size.height)
-    return imageView
-  }()
-  private var deltaAngle: CGFloat = 0
+  private var beginDragAngle: CGFloat = 0
 
   override init(frame: CGRect) {
     super.init(frame: frame)
@@ -45,9 +38,8 @@ class DCWheelPickerView: UIControl {
   private func setupWheelContainer() {
     addSubview(outerWheel)
     addSubview(innerWheel)
-    addSubview(glassCover)
     addSubview(centerWheel)
-//    wheelCenterView.changeValue(number: 0)
+    centerWheel.changeValue(number: 0)
   }
 
   private func setupGestureRecognizers() {
@@ -75,7 +67,7 @@ class DCWheelPickerView: UIControl {
     let touchPoint = touch.location(in: self)
     let dx = touchPoint.x - bounds.midX
     let dy = touchPoint.y - bounds.midY
-    deltaAngle = atan2(dy, dx)
+    beginDragAngle = atan2(dy, dx)
     let touchArea = wheelArea.detectTouchArea(with: touchPoint)
     switch touchArea {
     case .outer:
@@ -95,18 +87,18 @@ class DCWheelPickerView: UIControl {
     let touchPoint = touch.location(in: self)
     let dx = touchPoint.x - bounds.midX
     let dy = touchPoint.y - bounds.midY
-    let changeAngle = atan2(dy, dx)
-    let angleDifference = deltaAngle - changeAngle
+    let endDragAngle = atan2(dy, dx)
+    let angleDifference = endDragAngle - beginDragAngle
 
     let touchArea = wheelArea.detectTouchArea(with: touchPoint)
     switch touchArea {
     case .outer:
       if startTouchArea == .outer {
-        outerWheel.transform = startTransform.rotated(by: -angleDifference)
+        outerWheel.transform = startTransform.rotated(by: angleDifference)
       }
     case .inner:
       if startTouchArea == .inner {
-        innerWheel.transform = startTransform.rotated(by: -angleDifference)
+        innerWheel.transform = startTransform.rotated(by: angleDifference)
       }
     case .center:
       print("touch center")
