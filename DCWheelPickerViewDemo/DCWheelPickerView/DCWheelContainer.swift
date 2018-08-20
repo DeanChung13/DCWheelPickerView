@@ -141,8 +141,38 @@ class DCWheelContainerView: UIView {
     return result
   }
 
+  func detectIndex(touchPoint: CGPoint?) -> Int {
+    var result = 0
+    defer {
+      updateSelectedSectorBackgroundColor(index: result)
+    }
+    guard let point = touchPoint else {
+      result = detectCurrentSector().index
+      return result
+    }
+    let rotatedRadians = CGFloat(-atan2f(Float(transform.b), Float(transform.a)))
+    guard rotatedRadians != 0 else {
+      result = detectCurrentSector().index
+      return result
+    }
+
+    let dx = Float(point.x - centerPoint.x)
+    let dy = Float(point.y - centerPoint.y)
+    let radians = atan2f(dy, dx) + Float.pi
+
+    print("radians (tap, rotated) = \(radians, rotatedRadians)")
+
+    let tapAngleValue = CGFloat(radians) + rotatedRadians + CGFloat.pi
+    let sector = sectors.filter {
+      tapAngleValue > $0.minValue &&
+        tapAngleValue < $0.maxValue
+      }.last ?? sectors.first!
+    result = sector.index
+    return result
+  }
+
   func alignmentSector() {
-    let sectorDifferenceValue = currentSectorValue() - detectCurrentSector().midValue
+    let sectorDifferenceValue = currentAngleValue() - detectCurrentSector().midValue
     UIView.animate(withDuration: 0.2) {
       self.transform = self.transform.rotated(by: sectorDifferenceValue)
     }
@@ -150,12 +180,12 @@ class DCWheelContainerView: UIView {
 
   private func detectCurrentSector() -> DCWheelSector {
     return sectors.filter {
-      currentSectorValue() > $0.minValue &&
-      currentSectorValue() < $0.maxValue
+      currentAngleValue() > $0.minValue &&
+      currentAngleValue() < $0.maxValue
       }.last ?? sectors.first!
   }
 
-  private func currentSectorValue() -> CGFloat {
+  private func currentAngleValue() -> CGFloat {
     let radians = atan2f(Float(transform.b), Float(transform.a))
     let convertAngle = (radians <= 0) ? CGFloat.pi : 3*CGFloat.pi
     return convertAngle - CGFloat(radians)

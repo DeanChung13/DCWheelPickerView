@@ -110,28 +110,26 @@ class DCWheelPickerView: UIControl {
 
   override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
     print(#function)
-    let outerIndex = outerWheel.detectIndex()
+    let touchPoint = touch?.location(in: self)
+    let outerIndex = outerWheel.detectIndex(touchPoint: touchPoint)
     let innerIndex = innerWheel.detectIndex()
 
-    let result  = 10*outerIndex + innerIndex
     if startTouchArea == .outer {
+
+//      let tapIndex = outerWheel.detectIndex(touchPoint: point)
+//      print("prepare rotate to tap number: \(tapIndex)")
+
       outerWheel.alignmentSector()
     } else if startTouchArea == .inner {
-      innerWheel.alignmentSector()
+//      if isTap {
+//      } else {
+        innerWheel.alignmentSector()
+//      }
     }
+
+    let result  = 10*outerIndex + innerIndex
     centerWheel.changeValue(number: result)
   }
-
-//  private func touchArea(touchPoint: CGPoint) -> TouchArea  {
-//    let dist = distanceFromCenter(to: touchPoint)
-//
-//
-//
-//    switch dist {
-//    case 0...
-//    }
-//  }
-
 }
 
 extension DCWheelPickerView: UIGestureRecognizerDelegate {
