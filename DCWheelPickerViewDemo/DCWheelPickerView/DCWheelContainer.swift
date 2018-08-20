@@ -14,7 +14,7 @@ enum WheelContainerStyle {
 
 class DCWheelContainerView: UIView {
   private var radius: CGFloat {
-    return frame.size.width / 2.0 - 10.0
+    return frame.size.width / 2.0
   }
   private var selectedIndex: Int = 0
   private var maxNumber: Int = 0
@@ -30,8 +30,6 @@ class DCWheelContainerView: UIView {
   let sectorColor1 = UIColor(rgbHex: 0x59636F).cgColor
   let sectorColor2 = UIColor(rgbHex: 0x90A6BC).cgColor
   let sectorSelectedColor = UIColor(rgbHex: 0x55BFE7).cgColor
-
-  private let borderImageView = UIImageView()
 
   init(frame: CGRect, style: WheelContainerStyle = .outside) {
     self.style = style
@@ -63,7 +61,6 @@ class DCWheelContainerView: UIView {
   private func drawWheel() {
     doWithAllSectors(action: drawShape)
     doWithAllSectors(action: addTextLabel)
-//    doWithAllSectors(drawSectorTextLayer)
   }
 
   private func updateSelectedSectorBackgroundColor(index newSelectedIndex: Int) {
@@ -123,28 +120,17 @@ class DCWheelContainerView: UIView {
     return (style == .outside) ? 1.37 : 1.3
   }
 
-  private func drawTextLayer(with sector: DCWheelSector) {
-    let textLayer = CATextLayer()
-    textLayer.frame = CGRect(x: 0, y: 0, width: radius, height: radius)
-//    textLayer.contentsScale = UIScreen.main.scale
-    textLayer.font = UIFont.boldSystemFont(ofSize: 26)
-    textLayer.backgroundColor = UIColor.clear.cgColor
-    textLayer.foregroundColor = UIColor.white.cgColor
-    textLayer.alignmentMode = .center
-    textLayer.string = "\(sector.index)"
-    textLayer.anchorPoint = CGPoint(x: 0.5, y: 1)
-    textLayer.position = centerPoint
-    textLayer.setAffineTransform(CGAffineTransform.identity
-      .rotated(by: sector.labelAngle))
-    layer.addSublayer(textLayer)
-  }
-
   private func setupBorder() {
-    borderImageView.frame = bounds
-    addSubview(borderImageView)
-    let image = (style == .outside) ? UIImage(named: "O_out") :
-      UIImage(named: "O_middle")
-    borderImageView.image = image
+    let borderLayer = CAShapeLayer()
+    let path = UIBezierPath(ovalIn: bounds)
+    borderLayer.path = path.cgPath
+    borderLayer.fillColor = UIColor.clear.cgColor
+    borderLayer.strokeColor = UIColor.white.cgColor
+    borderLayer.lineWidth = 4.0
+    borderLayer.shadowColor = UIColor.darkGray.cgColor
+    borderLayer.shadowOffset = CGSize(width: 2.0, height: 2.0)
+    borderLayer.shadowOpacity = 0.8
+    layer.addSublayer(borderLayer)
   }
 
   private var sectorDifferenceValue: CGFloat = 0
