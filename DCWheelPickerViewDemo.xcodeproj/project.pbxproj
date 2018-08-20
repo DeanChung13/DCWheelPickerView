@@ -10,7 +10,6 @@
 		40503A872125472E005F0831 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503A862125472E005F0831 /* AppDelegate.swift */; };
 		40503A892125472E005F0831 /* ViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503A882125472E005F0831 /* ViewController.swift */; };
 		40503A8C2125472E005F0831 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40503A8A2125472E005F0831 /* Main.storyboard */; };
-		40503A8E2125472F005F0831 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 40503A8D2125472F005F0831 /* Assets.xcassets */; };
 		40503A912125472F005F0831 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 40503A8F2125472F005F0831 /* LaunchScreen.storyboard */; };
 		40503A9C2125472F005F0831 /* DCWheelPickerViewDemoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503A9B2125472F005F0831 /* DCWheelPickerViewDemoTests.swift */; };
 		40503AA8212547FD005F0831 /* DCWheelPickerView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AA7212547FD005F0831 /* DCWheelPickerView.swift */; };
@@ -35,7 +34,6 @@
 		40503A862125472E005F0831 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		40503A882125472E005F0831 /* ViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ViewController.swift; sourceTree = "<group>"; };
 		40503A8B2125472E005F0831 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/Main.storyboard; sourceTree = "<group>"; };
-		40503A8D2125472F005F0831 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		40503A902125472F005F0831 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		40503A922125472F005F0831 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		40503A972125472F005F0831 /* DCWheelPickerViewDemoTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = DCWheelPickerViewDemoTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -91,7 +89,6 @@
 				40503A882125472E005F0831 /* ViewController.swift */,
 				40503AA6212547CC005F0831 /* DCWheelPickerView */,
 				40503A8A2125472E005F0831 /* Main.storyboard */,
-				40503A8D2125472F005F0831 /* Assets.xcassets */,
 				40503A8F2125472F005F0831 /* LaunchScreen.storyboard */,
 				40503A922125472F005F0831 /* Info.plist */,
 			);
@@ -201,7 +198,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				40503A912125472F005F0831 /* LaunchScreen.storyboard in Resources */,
-				40503A8E2125472F005F0831 /* Assets.xcassets in Resources */,
 				40503A8C2125472E005F0831 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
