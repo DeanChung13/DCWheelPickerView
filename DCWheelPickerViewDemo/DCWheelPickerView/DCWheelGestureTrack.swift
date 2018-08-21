@@ -32,8 +32,10 @@ class DCWheelGestureTrack {
 
   var isTapped: Bool {
     guard let existingEndPoint = endPoint else { return false }
-    return abs(beginPoint.x - existingEndPoint.x) < 5 ||
-      abs(beginPoint.y - existingEndPoint.y) < 5
+    let dx = existingEndPoint.x - beginPoint.x
+    let dy = existingEndPoint.y - beginPoint.y
+    let distance = CGFloat(sqrtf(Float(dx*dx + dy*dy)))
+    return distance < 5
   }
 
   weak var transformView: UIView?
