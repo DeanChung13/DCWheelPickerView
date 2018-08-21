@@ -48,7 +48,7 @@ class DCWheelContainerView: UIView {
   private func buildSectors() {
     var mid = CGFloat.pi
     for i in 0 ..< numberOfSectors {
-      let sector = DCWheelSector(midValue: mid, fanWidth: fanWidth(), index: i)
+      let sector = DCWheelSector(index: i, fanWidth: fanWidth())
       mid += fanWidth()
       sectors.append(sector)
     }
@@ -133,48 +133,42 @@ class DCWheelContainerView: UIView {
     layer.addSublayer(borderLayer)
   }
 
-  private var sectorDifferenceValue: CGFloat = 0
-
   func detectIndex() -> Int {
     let result = detectCurrentSector().index
     updateSelectedSectorBackgroundColor(index: result)
     return result
   }
 
-  func detectIndex(touchPoint: CGPoint?) -> Int {
-    var result = 0
-    defer {
-      updateSelectedSectorBackgroundColor(index: result)
-    }
-    guard let point = touchPoint else {
-      result = detectCurrentSector().index
-      return result
-    }
-    let rotatedRadians = CGFloat(-atan2f(Float(transform.b), Float(transform.a)))
-    guard rotatedRadians != 0 else {
-      result = detectCurrentSector().index
-      return result
-    }
-
-    let dx = Float(point.x - centerPoint.x)
-    let dy = Float(point.y - centerPoint.y)
-    let radians = atan2f(dy, dx) + Float.pi
-
-    print("radians (tap, rotated) = \(radians, rotatedRadians)")
-
-    let tapAngleValue = CGFloat(radians) + rotatedRadians + CGFloat.pi
+  func detectTapIndex(point: DCPolarPoint) -> Int {
+    let radians = currentRadians()
+    print("Radians: \(radians)")
+    let totalRadians = 2*CGFloat.pi + point.angle - radians
     let sector = sectors.filter {
-      tapAngleValue > $0.minValue &&
-        tapAngleValue < $0.maxValue
-      }.last ?? sectors.first!
-    result = sector.index
-    return result
+      totalRadians > $0.minValue &&
+        totalRadians < $0.maxValue
+    }.last
+    guard let result = sector else {
+      print("Unknown radians: \(totalRadians)")
+      return -99
+    }
+
+    print(#function, ": \(result.index)")
+
+
+    print("Result: \(result.midValue)")
+    let angleDifference = -(result.midValue - CGFloat.pi + radians)
+    print("angleDifference = \(angleDifference)")
+    UIView.animate(withDuration: 0.2) {
+      self.transform = self.transform.rotated(by: angleDifference)
+    }
+    updateSelectedSectorBackgroundColor(index: result.index)
+    return result.index
   }
 
   func alignmentSector() {
     let sectorDifferenceValue = currentAngleValue() - detectCurrentSector().midValue
     UIView.animate(withDuration: 0.2) {
-      self.transform = self.transform.rotated(by: sectorDifferenceValue)
+      self.transform = self.transform.rotated(by: -sectorDifferenceValue)
     }
   }
 
@@ -185,10 +179,14 @@ class DCWheelContainerView: UIView {
       }.last ?? sectors.first!
   }
 
+  private func currentRadians() -> CGFloat {
+    return CGFloat(atan2f(Float(transform.b), Float(transform.a)))
+  }
   private func currentAngleValue() -> CGFloat {
-    let radians = atan2f(Float(transform.b), Float(transform.a))
-    let convertAngle = (radians <= 0) ? CGFloat.pi : 3*CGFloat.pi
-    return convertAngle - CGFloat(radians)
+
+//    let convertAngle = (currentRadians() <= 0) ? CGFloat.pi : 3*CGFloat.pi
+//    return convertAngle + CGFloat(currentRadians())
+    return CGFloat.pi + currentRadians()
   }
 
 }
