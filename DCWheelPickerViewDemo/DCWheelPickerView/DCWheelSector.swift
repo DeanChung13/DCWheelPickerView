@@ -37,21 +37,10 @@ class DCWheelSector {
   private let fanWidth: CGFloat
 
   init(index: Int, fanWidth: CGFloat) {
-    var mid = CGFloat(index) * -fanWidth + CGFloat.pi
-    if mid > CGFloat.pi {
-      mid = -(2*CGFloat.pi - CGFloat(index)*fanWidth)
-    }
-
-    self.midValue = mid
+    let radians = CGFloat(index) * fanWidth
+    self.midValue = CGFloat.pi - radians
     self.fanWidth = fanWidth
     self.index = index
-  }
-  func calculateMid(value: CGFloat) -> CGFloat {
-    var result = value
-    if value > 0 {
-      result = -2*CGFloat.pi + value
-    }
-    return result
   }
 }
 

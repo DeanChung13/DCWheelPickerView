@@ -49,6 +49,8 @@ class DCWheelArea {
     return centerFrame.width / 2.0
   }
 
+  var startTouchArea: DCWheelArea.TouchArea = .outOfRange
+
   private let rect: CGRect
 
   init(rect: CGRect) {
