@@ -28,7 +28,7 @@ class DCWheelCenterView: UIView {
     super.init(frame: frame)
     drawCircle()
     addSubview(numberLabel)
-    setupBorder()
+    drawBorder()
     isUserInteractionEnabled = false
   }
 
@@ -49,7 +49,7 @@ class DCWheelCenterView: UIView {
     layer.addSublayer(circleShapeLayer)
   }
 
-  private func setupBorder() {
+  private func drawBorder() {
     addArrow()
     let borderLayer = CAShapeLayer()
     let path = UIBezierPath(ovalIn: bounds)

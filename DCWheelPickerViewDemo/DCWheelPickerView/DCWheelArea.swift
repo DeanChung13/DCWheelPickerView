@@ -15,6 +15,13 @@ class DCWheelArea {
     case center = 0.339
   }
 
+  enum TouchArea {
+    case outer
+    case inner
+    case center
+    case outOfRange
+  }
+
   lazy var innerFrame: CGRect = {
     return rect.insetBy(dx: padding(ratio: .inner),
                         dy: padding(ratio: .inner))
@@ -42,12 +49,8 @@ class DCWheelArea {
     return centerFrame.width / 2.0
   }
 
-  enum TouchArea {
-    case outer
-    case inner
-    case center
-    case none
-  }
+  var startTouchArea: DCWheelArea.TouchArea = .outOfRange
+
   private let rect: CGRect
 
   init(rect: CGRect) {
@@ -58,9 +61,8 @@ class DCWheelArea {
     return (rect.width * ( 1 - ratio.rawValue )) / 2
   }
 
-  func detectTouchArea(with point: CGPoint) -> TouchArea {
-    let distance = distanceFromCenter(to: point)
-    switch distance {
+  func detectTouchArea(with point: DCPolarPoint) -> TouchArea {
+    switch point.radius {
     case  0 ... centerRadius:
       return .center
     case centerRadius ... innerRadius:
@@ -68,17 +70,7 @@ class DCWheelArea {
     case innerRadius ... outerRadius:
       return .outer
     default:
-      return .none
+      return .outOfRange
     }
   }
-
-  private func distanceFromCenter(to touchPoint: CGPoint) -> CGFloat {
-    let center = CGPoint(x: rect.midX, y: rect.midY)
-    let dx = Float(touchPoint.x - center.x)
-    let dy = Float(touchPoint.y - center.y)
-    return CGFloat(sqrtf(dx*dx + dy*dy))
-  }
-
-
-
 }

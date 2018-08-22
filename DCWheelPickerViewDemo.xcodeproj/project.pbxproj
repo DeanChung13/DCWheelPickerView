@@ -17,6 +17,10 @@
 		40503AAC2125484F005F0831 /* DCWheelContainer.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAB2125484F005F0831 /* DCWheelContainer.swift */; };
 		40503AAE2125E1FB005F0831 /* DCWheelCenterView.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */; };
 		40503AB02126C9DB005F0831 /* DCWheelArea.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AAF2126C9DB005F0831 /* DCWheelArea.swift */; };
+		40503AB2212B1B61005F0831 /* DCWheelGestureTrack.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AB1212B1B61005F0831 /* DCWheelGestureTrack.swift */; };
+		40503AB4212B2021005F0831 /* DCPolarPoint.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40503AB3212B2021005F0831 /* DCPolarPoint.swift */; };
+		40E850BF212D329700841B92 /* DCRadiansAngleConvertible.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E850BE212D329700841B92 /* DCRadiansAngleConvertible.swift */; };
+		40E850C1212D627400841B92 /* UIColor+HexValue.swift in Sources */ = {isa = PBXBuildFile; fileRef = 40E850C0212D627400841B92 /* UIColor+HexValue.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -44,6 +48,10 @@
 		40503AAB2125484F005F0831 /* DCWheelContainer.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelContainer.swift; sourceTree = "<group>"; };
 		40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelCenterView.swift; sourceTree = "<group>"; };
 		40503AAF2126C9DB005F0831 /* DCWheelArea.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelArea.swift; sourceTree = "<group>"; };
+		40503AB1212B1B61005F0831 /* DCWheelGestureTrack.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCWheelGestureTrack.swift; sourceTree = "<group>"; };
+		40503AB3212B2021005F0831 /* DCPolarPoint.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCPolarPoint.swift; sourceTree = "<group>"; };
+		40E850BE212D329700841B92 /* DCRadiansAngleConvertible.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = DCRadiansAngleConvertible.swift; sourceTree = "<group>"; };
+		40E850C0212D627400841B92 /* UIColor+HexValue.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIColor+HexValue.swift"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -112,6 +120,10 @@
 				40503AAB2125484F005F0831 /* DCWheelContainer.swift */,
 				40503AAD2125E1FB005F0831 /* DCWheelCenterView.swift */,
 				40503AAF2126C9DB005F0831 /* DCWheelArea.swift */,
+				40503AB1212B1B61005F0831 /* DCWheelGestureTrack.swift */,
+				40503AB3212B2021005F0831 /* DCPolarPoint.swift */,
+				40E850BE212D329700841B92 /* DCRadiansAngleConvertible.swift */,
+				40E850C0212D627400841B92 /* UIColor+HexValue.swift */,
 			);
 			path = DCWheelPickerView;
 			sourceTree = "<group>";
@@ -219,7 +231,11 @@
 				40503AAC2125484F005F0831 /* DCWheelContainer.swift in Sources */,
 				40503A892125472E005F0831 /* ViewController.swift in Sources */,
 				40503AAE2125E1FB005F0831 /* DCWheelCenterView.swift in Sources */,
+				40503AB4212B2021005F0831 /* DCPolarPoint.swift in Sources */,
 				40503A872125472E005F0831 /* AppDelegate.swift in Sources */,
+				40E850BF212D329700841B92 /* DCRadiansAngleConvertible.swift in Sources */,
+				40503AB2212B1B61005F0831 /* DCWheelGestureTrack.swift in Sources */,
+				40E850C1212D627400841B92 /* UIColor+HexValue.swift in Sources */,
 				40503AAA21254807005F0831 /* DCWheelSector.swift in Sources */,
 				40503AA8212547FD005F0831 /* DCWheelPickerView.swift in Sources */,
 				40503AB02126C9DB005F0831 /* DCWheelArea.swift in Sources */,

@@ -28,7 +28,6 @@ class DCWheelPickerView: UIControl {
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupWheelContainer()
-//    setupGestureRecognizers()
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -41,43 +40,23 @@ class DCWheelPickerView: UIControl {
     addSubview(centerWheel)
     centerWheel.changeValue(number: 0)
   }
-
-  private func setupGestureRecognizers() {
-    let tap = UITapGestureRecognizer(target: self, action: #selector(tap(gestureRecognizer:)))
-    tap.delegate = self
-    addGestureRecognizer(tap)
-
-    let pan = UIPanGestureRecognizer(target: self, action: #selector(pan(gestureRecognizer:)))
-    pan.delegate = self
-    addGestureRecognizer(pan)
-  }
-
-  @objc private func tap(gestureRecognizer: UITapGestureRecognizer) {
-
-  }
-
-  @objc private func pan(gestureRecognizer: UIPanGestureRecognizer) {
-
-  }
-
-  private var startTransform = CGAffineTransform.identity
-  private var startTouchArea: DCWheelArea.TouchArea = .none
+  private var isTapped = false
+  private lazy var gestureTrack: DCWheelGestureTrack = {
+    return DCWheelGestureTrack(centerPoint: CGPoint(x: bounds.midX, y: bounds.midY))
+  }()
 
   override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
     let touchPoint = touch.location(in: self)
-    let dx = touchPoint.x - bounds.midX
-    let dy = touchPoint.y - bounds.midY
-    beginDragAngle = atan2(dy, dx)
-    let touchArea = wheelArea.detectTouchArea(with: touchPoint)
+    gestureTrack.beginPoint = touchPoint
+
+    let touchArea = wheelArea.detectTouchArea(with: gestureTrack.beginPolarPoint)
+    wheelArea.startTouchArea = touchArea
     switch touchArea {
     case .outer:
-      startTransform = outerWheel.transform
-      startTouchArea = .outer
+      gestureTrack.startTransform = outerWheel.transform
     case .inner:
-      startTransform = innerWheel.transform
-      startTouchArea = .inner
-    default:
-      print("Do nothing")
+      gestureTrack.startTransform = innerWheel.transform
+    default: break
     }
     return true
   }
@@ -85,57 +64,47 @@ class DCWheelPickerView: UIControl {
 
   override func continueTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
     let touchPoint = touch.location(in: self)
-    let dx = touchPoint.x - bounds.midX
-    let dy = touchPoint.y - bounds.midY
-    let endDragAngle = atan2(dy, dx)
-    let angleDifference = endDragAngle - beginDragAngle
+    gestureTrack.changePoint = touchPoint
 
-    let touchArea = wheelArea.detectTouchArea(with: touchPoint)
+    let touchArea = wheelArea.detectTouchArea(with: gestureTrack.changePolarPoint)
     switch touchArea {
     case .outer:
-      if startTouchArea == .outer {
-        outerWheel.transform = startTransform.rotated(by: angleDifference)
+      if wheelArea.startTouchArea == .outer {
+        outerWheel.transform = gestureTrack.startTransform.rotated(by: gestureTrack.radiansDifference)
       }
     case .inner:
-      if startTouchArea == .inner {
-        innerWheel.transform = startTransform.rotated(by: angleDifference)
+      if wheelArea.startTouchArea == .inner {
+        innerWheel.transform = gestureTrack.startTransform.rotated(by: gestureTrack.radiansDifference)
       }
-    case .center:
-      print("touch center")
-    case .none:
-      print("Do nothing")
+    default: break
     }
     return true
   }
 
   override func endTracking(_ touch: UITouch?, with event: UIEvent?) {
-    print(#function)
-    let outerIndex = outerWheel.detectIndex()
-    let innerIndex = innerWheel.detectIndex()
+    let touchPoint = touch?.location(in: self)
+    gestureTrack.endPoint = touchPoint
 
-    let result  = 10*outerIndex + innerIndex
-    if startTouchArea == .outer {
-      outerWheel.alignmentSector()
-    } else if startTouchArea == .inner {
-      innerWheel.alignmentSector()
+    var outerIndex = outerWheel.detectIndex()
+    var innerIndex = innerWheel.detectIndex()
+
+    switch wheelArea.startTouchArea {
+    case .outer:
+      if gestureTrack.isTapped {
+        outerIndex = outerWheel.detectTapIndex(point: gestureTrack.endPolarPoint)
+      }
+    case .inner :
+      if gestureTrack.isTapped {
+        innerIndex = innerWheel.detectTapIndex(point: gestureTrack.endPolarPoint)
+      }
+    case .center:
+      print("Touch center")
+    default: break
     }
+
+    outerWheel.alignmentToNewSector()
+    innerWheel.alignmentToNewSector()
+    let result  = 10*outerIndex + innerIndex
     centerWheel.changeValue(number: result)
-  }
-
-//  private func touchArea(touchPoint: CGPoint) -> TouchArea  {
-//    let dist = distanceFromCenter(to: touchPoint)
-//
-//
-//
-//    switch dist {
-//    case 0...
-//    }
-//  }
-
-}
-
-extension DCWheelPickerView: UIGestureRecognizerDelegate {
-  override func gestureRecognizerShouldBegin(_ gestureRecognizer: UIGestureRecognizer) -> Bool {
-    return true
   }
 }

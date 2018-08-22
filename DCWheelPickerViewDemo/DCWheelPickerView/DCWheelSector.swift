@@ -9,22 +9,36 @@
 import UIKit
 
 class DCWheelSector {
-  var minValue: CGFloat {
+  lazy var minValue: CGFloat = {
     return midValue - fanWidth/2
-  }
-  var maxValue: CGFloat {
-    return midValue + fanWidth/2
-  }
-  var labelAngle: CGFloat {
-    return midValue + CGFloat.pi/2
-  }
+  }()
+
+  lazy var maxValue: CGFloat = {
+    var result = midValue + fanWidth/2
+    if result > CGFloat.pi {
+      result = -(2*CGFloat.pi - result)
+    }
+    return result
+  }()
+
+  lazy var arcStartAngle: CGFloat = {
+    return -maxValue
+  }()
+  lazy var arcEndAngle: CGFloat = {
+    return -minValue
+  }()
+  lazy var labelAngle: CGFloat = {
+    return -midValue + CGFloat.pi/2
+  }()
+
   let midValue: CGFloat
   let index: Int
+
   private let fanWidth: CGFloat
 
-
-  init(midValue: CGFloat, fanWidth: CGFloat, index: Int) {
-    self.midValue = midValue
+  init(index: Int, fanWidth: CGFloat) {
+    let radians = CGFloat(index) * fanWidth
+    self.midValue = CGFloat.pi - radians
     self.fanWidth = fanWidth
     self.index = index
   }
