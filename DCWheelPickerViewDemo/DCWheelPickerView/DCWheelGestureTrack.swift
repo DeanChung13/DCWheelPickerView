@@ -9,8 +9,16 @@
 import UIKit
 
 class DCWheelGestureTrack {
-  var beginPoint = CGPoint.zero
-  var changePoint = CGPoint.zero
+  var beginPoint = CGPoint.zero {
+    didSet {
+      isTapped = true
+    }
+  }
+  var changePoint = CGPoint.zero {
+    didSet {
+      isTapped = false
+    }
+  }
   var endPoint: CGPoint? = CGPoint.zero
   var centerPoint = CGPoint.zero
   var startTransform = CGAffineTransform.identity
@@ -26,17 +34,11 @@ class DCWheelGestureTrack {
   var endPolarPoint: DCPolarPoint {
     return DCPolarPoint(cartesianOriginalPoint: centerPoint, relativePoint: endPoint ?? CGPoint.zero)
   }
-  var angleDifference: CGFloat {
-    return changePolarPoint.angle - beginPolarPoint.angle
+  var radiansDifference: CGFloat {
+    return -(changePolarPoint.radians - beginPolarPoint.radians)
   }
 
-  var isTapped: Bool {
-    guard let existingEndPoint = endPoint else { return false }
-    let dx = existingEndPoint.x - beginPoint.x
-    let dy = existingEndPoint.y - beginPoint.y
-    let distance = CGFloat(sqrtf(Float(dx*dx + dy*dy)))
-    return distance < 5
-  }
+  var isTapped: Bool = true
 
   weak var transformView: UIView?
 
