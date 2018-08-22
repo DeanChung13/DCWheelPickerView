@@ -14,8 +14,9 @@ enum WheelContainerStyle {
 
 class DCWheelContainerView: UIView {
   private var radius: CGFloat {
-    return frame.size.width / 2.0
+    return (frame.size.width - borderWidth) / 2.0
   }
+  private var borderWidth: CGFloat = 4.0
   private var selectedIndex: Int = 0
   private var maxNumber: Int = 0
   private let numberOfSectors = 10
@@ -55,7 +56,6 @@ class DCWheelContainerView: UIView {
       let sector = DCWheelSector(index: i, fanWidth: fanWidth)
       mid += fanWidth
       sectors.append(sector)
-      print(sector)
     }
   }
 
@@ -123,11 +123,11 @@ class DCWheelContainerView: UIView {
 
   private func setupBorder() {
     let borderLayer = CAShapeLayer()
-    let path = UIBezierPath(ovalIn: bounds)
+    let path = UIBezierPath(ovalIn: bounds.insetBy(dx: borderWidth, dy: borderWidth))
     borderLayer.path = path.cgPath
     borderLayer.fillColor = UIColor.clear.cgColor
     borderLayer.strokeColor = UIColor.white.cgColor
-    borderLayer.lineWidth = 4.0
+    borderLayer.lineWidth = borderWidth
     borderLayer.shadowColor = UIColor.darkGray.cgColor
     borderLayer.shadowOffset = CGSize(width: 2.0, height: 2.0)
     borderLayer.shadowOpacity = 0.8
@@ -155,7 +155,6 @@ class DCWheelContainerView: UIView {
       return -99
     }
     let result = sector.index
-    print(#function, ": \(result)")
     prepareChangeToSector = sector
     return result
   }

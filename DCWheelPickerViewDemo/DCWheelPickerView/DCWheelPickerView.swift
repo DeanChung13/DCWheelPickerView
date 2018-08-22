@@ -28,6 +28,7 @@ class DCWheelPickerView: UIControl {
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupWheelContainer()
+    backgroundColor = UIColor.green
   }
 
   required init?(coder aDecoder: NSCoder) {

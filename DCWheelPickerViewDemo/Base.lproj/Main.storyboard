@@ -19,13 +19,13 @@
                         <subviews>
                             <view contentMode="scaleToFill" translatesAutoresizingMaskIntoConstraints="NO" id="3tH-Jd-rA2">
                                 <rect key="frame" x="20" y="166" width="335" height="335"/>
-                                <color key="backgroundColor" red="0.99953407049999998" green="0.98835557699999999" blue="0.47265523669999998" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                                 <constraints>
                                     <constraint firstAttribute="width" secondItem="3tH-Jd-rA2" secondAttribute="height" multiplier="1:1" id="8M7-iU-RWx"/>
                                 </constraints>
                             </view>
                         </subviews>
-                        <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                        <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
                         <constraints>
                             <constraint firstItem="3tH-Jd-rA2" firstAttribute="centerY" secondItem="8bC-Xf-vdC" secondAttribute="centerY" id="73a-kW-wgt"/>
                             <constraint firstItem="6Tk-OE-BBY" firstAttribute="trailing" secondItem="3tH-Jd-rA2" secondAttribute="trailing" constant="20" id="fQr-lD-lKF"/>
