@@ -32,4 +32,4 @@ wheelPicker.didTapCenterCompletion = {
 
 ## License
 
-This code is distributed under the terms and conditions of the [MIT license](https://github.com/DeanChung13/DCWheelPickerView/LICENSE).
+This code is distributed under the terms and conditions of the [MIT license](https://github.com/DeanChung13/DCWheelPickerView/blob/master/LICENSE).
