@@ -22,21 +22,6 @@ class DCWheelArea {
     case outOfRange
   }
 
-  lazy var innerFrame: CGRect = {
-    return rect.insetBy(dx: padding(ratio: .inner),
-                        dy: padding(ratio: .inner))
-  }()
-
-  lazy var outerFrame: CGRect = {
-    return rect.insetBy(dx: padding(ratio: .outer),
-                        dy: padding(ratio: .outer))
-  }()
-
-  lazy var centerFrame: CGRect = {
-    return rect.insetBy(dx: padding(ratio: .center),
-                        dy: padding(ratio: .center))
-  }()
-
   private var outerRadius: CGFloat {
     return outerFrame.width / 2.0
   }
@@ -53,9 +38,26 @@ class DCWheelArea {
 
   private let rect: CGRect
 
+  // MARK: initializer
   init(rect: CGRect) {
     self.rect = rect
   }
+
+  // MARK: lazy properties
+  lazy var innerFrame: CGRect = {
+    return rect.insetBy(dx: padding(ratio: .inner),
+                        dy: padding(ratio: .inner))
+  }()
+
+  lazy var outerFrame: CGRect = {
+    return rect.insetBy(dx: padding(ratio: .outer),
+                        dy: padding(ratio: .outer))
+  }()
+
+  lazy var centerFrame: CGRect = {
+    return rect.insetBy(dx: padding(ratio: .center),
+                        dy: padding(ratio: .center))
+  }()
 
   private func padding(ratio: WheelSizeRatio) -> CGFloat {
     return (rect.width * ( 1 - ratio.rawValue )) / 2

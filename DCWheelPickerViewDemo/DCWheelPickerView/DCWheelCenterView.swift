@@ -9,6 +9,39 @@
 import UIKit
 
 class DCWheelCenterView: UIView {
+  // MARK: initializer
+  override init(frame: CGRect) {
+    super.init(frame: frame)
+    isUserInteractionEnabled = false
+    layer.addSublayer(circleLayer)
+    addSubview(numberLabel)
+    layer.addSublayer(arrowLayer)
+    layer.addSublayer(borderLayer)
+  }
+
+  required init?(coder aDecoder: NSCoder) {
+    fatalError("init(coder:) has not been implemented")
+  }
+
+  override func layoutSubviews() {
+    super.layoutSubviews()
+    numberLabel.center = centerPoint
+  }
+
+  func changeValue(number: Int) {
+    let string = NSString(format: "%02d", number)
+    numberLabel.text = string as String
+  }
+
+  // MARK: lazy properties
+  lazy var circleLayer: CAShapeLayer = {
+    let circleShapeLayer = CAShapeLayer()
+    let path = UIBezierPath(ovalIn: bounds)
+    circleShapeLayer.path = path.cgPath
+    circleShapeLayer.fillColor = UIColor(rgbHex: 0xFD3589).cgColor
+    return circleShapeLayer
+  }()
+
   lazy var numberLabel: UILabel = {
     let templateText: NSString = "99"
     let font = UIFont.boldSystemFont(ofSize: 70)
@@ -24,33 +57,7 @@ class DCWheelCenterView: UIView {
     return label
   }()
 
-  override init(frame: CGRect) {
-    super.init(frame: frame)
-    drawCircle()
-    addSubview(numberLabel)
-    drawBorder()
-    isUserInteractionEnabled = false
-  }
-
-  required init?(coder aDecoder: NSCoder) {
-    fatalError("init(coder:) has not been implemented")
-  }
-
-  override func layoutSubviews() {
-    super.layoutSubviews()
-    numberLabel.center = centerPoint
-  }
-
-  private func drawCircle() {
-    let circleShapeLayer = CAShapeLayer()
-    let path = UIBezierPath(ovalIn: bounds)
-    circleShapeLayer.path = path.cgPath
-    circleShapeLayer.fillColor = UIColor(rgbHex: 0xFD3589).cgColor
-    layer.addSublayer(circleShapeLayer)
-  }
-
-  private func drawBorder() {
-    addArrow()
+  lazy var borderLayer: CAShapeLayer = {
     let borderLayer = CAShapeLayer()
     let path = UIBezierPath(ovalIn: bounds)
     borderLayer.path = path.cgPath
@@ -60,10 +67,10 @@ class DCWheelCenterView: UIView {
     borderLayer.shadowColor = UIColor.darkGray.cgColor
     borderLayer.shadowOffset = CGSize(width: 2.0, height: 2.0)
     borderLayer.shadowOpacity = 0.8
-    layer.addSublayer(borderLayer)
-  }
+    return borderLayer
+  }()
 
-  private func addArrow() {
+  lazy var arrowLayer: CAShapeLayer = {
     let arrowLayer = CAShapeLayer()
     let path = UIBezierPath()
     let triangleHeight: CGFloat = 13
@@ -75,13 +82,8 @@ class DCWheelCenterView: UIView {
     path.close()
     arrowLayer.path = path.cgPath
     arrowLayer.fillColor = UIColor.white.cgColor
-    layer.addSublayer(arrowLayer)
-  }
-
-  func changeValue(number: Int) {
-    let string = NSString(format: "%02d", number)
-    numberLabel.text = string as String
-  }
+    return arrowLayer
+  }()
 }
 
 extension UIView {

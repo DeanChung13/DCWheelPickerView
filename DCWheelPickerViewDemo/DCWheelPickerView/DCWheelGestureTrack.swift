@@ -9,16 +9,6 @@
 import UIKit
 
 class DCWheelGestureTrack {
-  var beginPoint = CGPoint.zero {
-    didSet {
-      isTapped = true
-    }
-  }
-  var changePoint = CGPoint.zero {
-    didSet {
-      isTapped = false
-    }
-  }
   var endPoint: CGPoint? = CGPoint.zero
   var centerPoint = CGPoint.zero
   var startTransform = CGAffineTransform.identity
@@ -40,9 +30,19 @@ class DCWheelGestureTrack {
 
   var isTapped: Bool = true
 
-  weak var transformView: UIView?
-
   init(centerPoint: CGPoint) {
     self.centerPoint = centerPoint
+  }
+
+  // MARK: Property Observers
+  var beginPoint = CGPoint.zero {
+    didSet {
+      isTapped = true
+    }
+  }
+  var changePoint = CGPoint.zero {
+    didSet {
+      isTapped = false
+    }
   }
 }

@@ -13,29 +13,33 @@ enum WheelContainerStyle {
 }
 
 class DCWheelContainerView: UIView {
-  private var radius: CGFloat {
-    return (frame.size.width - borderWidth) / 2.0
-  }
+  let sectorColor1 = UIColor(rgbHex: 0x59636F).cgColor
+  let sectorColor2 = UIColor(rgbHex: 0x90A6BC).cgColor
+  let sectorSelectedColor = UIColor(rgbHex: 0x55BFE7).cgColor
+
+  private let numberOfSectors = 10
   private var borderWidth: CGFloat = 4.0
   private var selectedIndex: Int = 0
   private var maxNumber: Int = 0
-  private let numberOfSectors = 10
+  private var style: WheelContainerStyle
+  private var sectorLayers: [CAShapeLayer] = []
+  private var prepareChangeToSector: DCWheelSector?
+  private var radius: CGFloat {
+    return (frame.size.width - borderWidth) / 2.0
+  }
+
+  // MARK: lazy properties
   private lazy var sectors: [DCWheelSector] = {
     var sectors: [DCWheelSector] = []
     sectors.reserveCapacity(numberOfSectors)
     return sectors
   }()
-  lazy var fanWidth: CGFloat = {
+  
+  private lazy var fanWidth: CGFloat = {
     return CGFloat.pi * 2 / CGFloat(numberOfSectors)
   }()
-  private var style: WheelContainerStyle
-  private var sectorLayers: [CAShapeLayer] = []
 
-  let sectorColor1 = UIColor(rgbHex: 0x59636F).cgColor
-  let sectorColor2 = UIColor(rgbHex: 0x90A6BC).cgColor
-  let sectorSelectedColor = UIColor(rgbHex: 0x55BFE7).cgColor
-  private var prepareChangeToSector: DCWheelSector?
-
+  // MARK: initializer
   init(frame: CGRect, style: WheelContainerStyle = .outside) {
     self.style = style
     super.init(frame: frame)
@@ -134,41 +138,6 @@ class DCWheelContainerView: UIView {
     layer.addSublayer(borderLayer)
   }
 
-  func detectIndex() -> Int {
-    let sector = detectCurrentSector()
-    let result = sector.index
-    prepareChangeToSector = sector
-    return result
-  }
-
-  func detectTapIndex(point: DCPolarPoint) -> Int {
-    var totalRadians = point.radians + rotatedRadians()
-    if totalRadians > CGFloat.pi {
-      totalRadians = -2*CGFloat.pi + totalRadians
-    }
-    if totalRadians < -CGFloat.pi {
-      totalRadians = 2*CGFloat.pi + totalRadians
-    }
-
-    guard let sector = detectSector(sectorRadians: totalRadians) else {
-      print("Unknown radians: \(totalRadians)")
-      return -99
-    }
-    let result = sector.index
-    prepareChangeToSector = sector
-    return result
-  }
-
-  func alignmentToNewSector() {
-    guard let sector = prepareChangeToSector else { return }
-    let sectorDifferenceValue = sectorDifferenceRadians(from: sector.midValue)
-    UIView.animate(withDuration: 0.2) {
-      self.transform = CGAffineTransform.identity.rotated(by: sectorDifferenceValue)
-    }
-    prepareChangeToSector = nil
-    updateSelectedSectorBackgroundColor(index: sector.index)
-  }
-
   private func detectCurrentSector() -> DCWheelSector {
     let currentSectorRadians = rotatedSectorRadians()
     return detectSector(sectorRadians: currentSectorRadians) ?? sectors.first!
@@ -209,4 +178,52 @@ class DCWheelContainerView: UIView {
     return result
   }
 
+  func detectIndex(gestureTrack: DCWheelGestureTrack? = nil) -> Int {
+    guard let tracker = gestureTrack else {
+      return detectPanIndex()
+    }
+
+    if tracker.isTapped {
+      return detectTapIndex(point: tracker.endPolarPoint)
+    } else {
+      return detectPanIndex()
+    }
+  }
+
+  private func detectPanIndex() -> Int {
+    let sector = detectCurrentSector()
+    let result = sector.index
+    prepareChangeToSector = sector
+    return result
+  }
+
+  private func detectTapIndex(point: DCPolarPoint) -> Int {
+    var totalRadians = point.radians + rotatedRadians()
+    if totalRadians > CGFloat.pi {
+      totalRadians = -2*CGFloat.pi + totalRadians
+    }
+    if totalRadians < -CGFloat.pi {
+      totalRadians = 2*CGFloat.pi + totalRadians
+    }
+
+    guard let sector = detectSector(sectorRadians: totalRadians) else {
+      print("Unknown radians: \(totalRadians)")
+      return -99
+    }
+    let result = sector.index
+    prepareChangeToSector = sector
+    return result
+  }
+
+  func alignmentToNewSector() {
+    guard let sector = prepareChangeToSector else { return }
+    let sectorDifferenceValue = sectorDifferenceRadians(from: sector.midValue)
+    UIView.animate(withDuration: 0.5,
+                   delay: 0, usingSpringWithDamping: 0.8, initialSpringVelocity: 5,
+                   options: [.curveEaseOut], animations: {
+                    self.transform = CGAffineTransform.identity.rotated(by: sectorDifferenceValue)
+    }, completion: nil)
+    prepareChangeToSector = nil
+    updateSelectedSectorBackgroundColor(index: sector.index)
+  }
 }
