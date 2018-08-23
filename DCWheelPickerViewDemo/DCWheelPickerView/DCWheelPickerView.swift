@@ -7,28 +7,15 @@
 //
 
 import UIKit
-
+typealias DCWheelPickerViewDidSelectIndexCompletion = (Int) -> Void
+typealias DCWheelPickerViewDidTapCenterCompletion = () -> Void
 class DCWheelPickerView: UIControl {
-  private lazy var wheelArea: DCWheelArea = {
-    return DCWheelArea(rect: bounds)
-  }()
-  private lazy var innerWheel: DCWheelContainerView = {
-    return DCWheelContainerView(frame: wheelArea.innerFrame,
-                                style: .inside)
-  }()
-  private lazy var outerWheel: DCWheelContainerView = {
-    return DCWheelContainerView(frame: wheelArea.outerFrame,
-                                       style: .outside)
-  }()
-  private lazy var centerWheel: DCWheelCenterView = {
-    return DCWheelCenterView(frame: wheelArea.centerFrame)
-  }()
-  private var beginDragAngle: CGFloat = 0
-
+  var didSelectIndexCompletion: DCWheelPickerViewDidSelectIndexCompletion?
+  var didTapCenterCompletion: DCWheelPickerViewDidTapCenterCompletion?
+  // MARK: initializer
   override init(frame: CGRect) {
     super.init(frame: frame)
     setupWheelContainer()
-    backgroundColor = UIColor.green
   }
 
   required init?(coder aDecoder: NSCoder) {
@@ -41,11 +28,33 @@ class DCWheelPickerView: UIControl {
     addSubview(centerWheel)
     centerWheel.changeValue(number: 0)
   }
-  private var isTapped = false
+
+  // MARK: lazy properties
+  private lazy var wheelArea: DCWheelArea = {
+    return DCWheelArea(rect: bounds)
+  }()
+
+  private lazy var innerWheel: DCWheelContainerView = {
+    return DCWheelContainerView(frame: wheelArea.innerFrame,
+                                style: .inside)
+  }()
+
+  private lazy var outerWheel: DCWheelContainerView = {
+    return DCWheelContainerView(frame: wheelArea.outerFrame,
+                                style: .outside)
+  }()
+
+  private lazy var centerWheel: DCWheelCenterView = {
+    return DCWheelCenterView(frame: wheelArea.centerFrame)
+  }()
+
   private lazy var gestureTrack: DCWheelGestureTrack = {
     return DCWheelGestureTrack(centerPoint: CGPoint(x: bounds.midX, y: bounds.midY))
   }()
+}
 
+// MARK: Gesture Tracking
+extension DCWheelPickerView {
   override func beginTracking(_ touch: UITouch, with event: UIEvent?) -> Bool {
     let touchPoint = touch.location(in: self)
     gestureTrack.beginPoint = touchPoint
@@ -86,26 +95,24 @@ class DCWheelPickerView: UIControl {
     let touchPoint = touch?.location(in: self)
     gestureTrack.endPoint = touchPoint
 
-    var outerIndex = outerWheel.detectIndex()
-    var innerIndex = innerWheel.detectIndex()
+    endSelectWheel(with: wheelArea.startTouchArea)
 
-    switch wheelArea.startTouchArea {
-    case .outer:
-      if gestureTrack.isTapped {
-        outerIndex = outerWheel.detectTapIndex(point: gestureTrack.endPolarPoint)
-      }
-    case .inner :
-      if gestureTrack.isTapped {
-        innerIndex = innerWheel.detectTapIndex(point: gestureTrack.endPolarPoint)
-      }
-    case .center:
-      print("Touch center")
-    default: break
+    if wheelArea.startTouchArea == .center {
+      didTapCenterCompletion?()
     }
+  }
+
+  private func endSelectWheel(with area: DCWheelArea.TouchArea) {
+    guard area == .outer || area == .inner else { return }
+
+    let outerIndex = outerWheel.detectIndex(gestureTrack: (area == .outer) ? gestureTrack : nil)
+    let innerIndex = innerWheel.detectIndex(gestureTrack: (area == .inner) ? gestureTrack : nil)
+    let result  = 10*outerIndex + innerIndex
 
     outerWheel.alignmentToNewSector()
     innerWheel.alignmentToNewSector()
-    let result  = 10*outerIndex + innerIndex
+
     centerWheel.changeValue(number: result)
+    didSelectIndexCompletion?(result)
   }
 }
